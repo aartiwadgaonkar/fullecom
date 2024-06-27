@@ -16,8 +16,9 @@ app.use("*",(req,res)=>{
     res.status(404).json({mesaage:"resource not found 404"})
 })
 app.use((err,req,res,next)=>{
-    console.log(err);
-    res.status(500).json({mesaage:"server Errror",error:err.mesaage})
+    console.log(err,"server error");
+    res.status(500).json({mesaage:"server Errror",error:err.mesaage
+    })
 })
 
 mongoose.connect(process.env.MONGO_URL)

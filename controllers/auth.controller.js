@@ -49,7 +49,7 @@ exports.LoginUser= asyncHandler( async (req, res)=>{
     const token =jwt.sign({userId:found._id},process.env.JWT_KEY)
     res.cookie("user",token,{httpOnly:true})
     res.json({message:"user login success ",result:{
-        _id:found_id,
+        _id:found._id,
         name:found.name,
         email:found.email
     }})})
