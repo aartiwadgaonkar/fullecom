@@ -1,6 +1,7 @@
 const asyncHandler= require("express-async-handler")
 const Product=require("../models/Product");
 const { upload } = require("../utils/upload");
+const Order = require("../models/Order");
 const cloudinary=require("cloudinary").v2
 cloudinary.config({ 
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
@@ -53,7 +54,9 @@ exports.getProductDetails= asyncHandler( async (req,res)=>{
 // order
 
 exports.getAllOrders= asyncHandler( async (req,res)=>{
-    res.json({message:"Order fetch Success"})
+    const result=await Order.find().populate("user",{password:0,active:0,createdAt:0,updatedAt:0,__v:0}).populate("products.product",{_id:1,name:1,desc:1,price:1,mrp:1,images:1})
+    .sort({createdAt:-1})
+    res.json({message:"Order fetch Success",result})
 })
 exports.getOrderDetail= asyncHandler( async (req,res)=>{
     res.json({message:"Order detail fetch Success"})
@@ -62,6 +65,9 @@ exports.cancelOrder= asyncHandler( async (req,res)=>{
     res.json({message:"Order cancel Success"})
 })
 exports.updateOrderStatus= asyncHandler( async (req,res)=>{
+    const {id}= req.params
+    const {status}=req.body
+    await Order.findByIdAndUpdate(id,{status})
     res.json({message:"Order update Success"})
 })
 
