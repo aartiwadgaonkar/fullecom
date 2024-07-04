@@ -46,6 +46,9 @@ exports.LoginUser= asyncHandler( async (req, res)=>{
         return res.status(401).json({message:"password does not match "})
 
     }
+    if (!found.active) {
+        return res.status(401).json({message:"account block by admin"})
+    }
     const token =jwt.sign({userId:found._id},process.env.JWT_KEY)
     res.cookie("user",token,{httpOnly:true})
     res.json({message:"user login success ",result:{
